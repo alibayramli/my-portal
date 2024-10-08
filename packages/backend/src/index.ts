@@ -7,6 +7,13 @@
  */
 
 import { createBackend } from '@backstage/backend-defaults';
+import { createBackendModule } from '@backstage/backend-plugin-api';
+import { stringifyEntityRef } from '@backstage/catalog-model';
+import { githubAuthenticator } from '@backstage/plugin-auth-backend-module-github-provider';
+import {
+  authProvidersExtensionPoint,
+  createOAuthProviderFactory,
+} from '@backstage/plugin-auth-node';
 
 const backend = createBackend();
 
@@ -20,6 +27,55 @@ backend.add(import('@backstage/plugin-auth-backend'));
 // See https://backstage.io/docs/backend-system/building-backends/migrating#the-auth-plugin
 backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
 // See https://backstage.io/docs/auth/guest/provider
+
+const customAuthResolver = createBackendModule({
+  // This ID must be exactly "auth" because that's the plugin it targets
+  pluginId: 'auth',
+  // This ID must be unique, but can be anything
+  moduleId: 'custom-auth-provider',
+  register(reg) {
+    reg.registerInit({
+      deps: { providers: authProvidersExtensionPoint },
+      async init({ providers }) {
+        providers.registerProvider({
+          // This ID must match the actual provider config, e.g. addressing
+          // auth.providers.github means that this must be "github".
+          providerId: 'github',
+          // Use createProxyAuthProviderFactory instead if it's one of the proxy
+          // based providers rather than an OAuth based one
+          factory: createOAuthProviderFactory({
+            authenticator: githubAuthenticator,
+            async signInResolver(info, ctx) {
+              const {
+                profile: { email },
+              } = info;
+
+              if (!email) {
+                throw new Error('User profile contained no email');
+              }
+              const [userId] = email.split('@');
+
+              const userEntity = stringifyEntityRef({
+                kind: 'User',
+                name: userId,
+                namespace: 'default',
+              });
+
+              return ctx.issueToken({
+                claims: {
+                  sub: userEntity,
+                  ent: [userEntity],
+                },
+              });
+            },
+          }),
+        });
+      },
+    });
+  },
+});
+
+backend.add(customAuthResolver);
 
 // catalog plugin
 backend.add(import('@backstage/plugin-catalog-backend/alpha'));
