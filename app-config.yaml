@@ -12,6 +12,10 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
+  reading:
+    allow:
+      - host: 'gist.githubusercontent.com'
+
   baseUrl: http://localhost:7007
   listen:
     port: 7007
