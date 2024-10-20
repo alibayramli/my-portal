@@ -27015,7 +27015,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-use@npm:^17.2.4, react-use@npm:^17.3.2, react-use@npm:^17.4.0":
+"react-use@npm:^17.2.4, react-use@npm:^17.3.2, react-use@npm:^17.4.0, react-use@npm:^17.5.1":
   version: 17.5.1
   resolution: "react-use@npm:17.5.1"
   dependencies:
@@ -27859,6 +27859,7 @@ __metadata:
     "@spotify/prettier-config": "npm:^12.0.0"
     node-gyp: "npm:^10.0.0"
     prettier: "npm:^2.3.2"
+    react-use: "npm:^17.5.1"
     typescript: "npm:~5.4.0"
   languageName: unknown
   linkType: soft

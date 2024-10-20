@@ -64,6 +64,8 @@ import {
   isGithubActionsAvailable,
 } from '@backstage-community/plugin-github-actions';
 
+import { RandomJokeCard } from '@internal/backstage-plugin-random-joke';
+
 const techdocsContent = (
   <EntityTechdocsContent>
     <TechDocsAddons>
@@ -142,6 +144,10 @@ const overviewContent = (
     </Grid>
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
+    </Grid>
+
+    <Grid item md={12} xs={12}>
+      <RandomJokeCard />
     </Grid>
   </Grid>
 );

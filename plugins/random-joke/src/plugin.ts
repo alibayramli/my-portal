@@ -1,4 +1,5 @@
 import {
+  createComponentExtension,
   createPlugin,
   createRoutableExtension,
 } from '@backstage/core-plugin-api';
@@ -11,6 +12,15 @@ export const randomJokePlugin = createPlugin({
     root: rootRouteRef,
   },
 });
+
+export const RandomJokeCard = randomJokePlugin.provide(
+  createComponentExtension({
+    component: {
+      lazy: () =>
+        import('./components/RandomJokeCard').then(m => m.RandomJokeCard),
+    },
+  }),
+);
 
 export const RandomJokePage = randomJokePlugin.provide(
   createRoutableExtension({
