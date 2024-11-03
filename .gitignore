@@ -47,7 +47,8 @@ site
 # Sensitive credentials
 *-credentials.yaml
 
-# vscode database functionality support files
+# vscode
+.vscode
 *.session.sql
 
 # E2E test reports
